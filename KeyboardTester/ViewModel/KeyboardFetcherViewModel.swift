@@ -18,8 +18,8 @@ class KeyboardFetcherViewModel: ObservableObject {
         self.buttons = KeyboardButtons(
             up: KeyboardButton(keycode: "82", name: "Up"),
             down: KeyboardButton(keycode: "81", name: "Down"),
-            left: KeyboardButton(keycode: "Left", name: "80"),
-            right: KeyboardButton(keycode: "Right", name: "79")
+            left: KeyboardButton(keycode: "80", name: "Left"),
+            right: KeyboardButton(keycode: "79", name: "Right")
         )
 
         NotificationCenter.default.addObserver(
