@@ -40,37 +40,29 @@ struct KeyboardFetcherView: View {
                     }
                 HStack(alignment: .center) {
                         List {
-                            Section(header: Text("Directions")) {
 
-                                HStack(alignment: .center, spacing: 20) {
-                                    Text("Up:")
-                                    Spacer()
-                                    if self.keyboardFetcher.buttons.up.pressed { Circle().foregroundColor(.green).frame(width: 32, height: 32) }
-                                }
-                                HStack(alignment: .center, spacing: 20) {
-                                    Text("Down:")
-                                    Spacer()
-                                    if self.keyboardFetcher.buttons.down.pressed { Circle().foregroundColor(.green).frame(width: 32, height: 32) }
-                                }
-                                HStack(alignment: .center, spacing: 20) {
-                                    Text("Left:")
-                                    Spacer()
-                                    if self.keyboardFetcher.buttons.left.pressed { Circle().foregroundColor(.green).frame(width: 32, height: 32) }
-                                }
+                            ForEach(0 ..< KeyboardButtonType.allCases.count) { type in
+                                Section(header: Text(KeyboardButtonType.allCases[type].rawValue)) {
+                                    ForEach(0 ..< self.keyboardFetcher.buttons.count) { button in
 
-                                HStack(alignment: .center, spacing: 20) {
-                                    Text("Right:")
-                                    Spacer()
-                                    if self.keyboardFetcher.buttons.right.pressed { Circle().foregroundColor(.green).frame(width: 32, height: 32) }
+                                        if self.keyboardFetcher.buttons[button].type == KeyboardButtonType.allCases[type] {
+                                            HStack(alignment: .center, spacing: 20) {
+                                                Text(self.keyboardFetcher.buttons[button].name)
+                                                Spacer()
+                                                if self.keyboardFetcher.buttons[button].pressed {
+                                                    Circle().foregroundColor(.green).frame(width: 32, height: 32)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+                    }.navigationBarTitle("Keyboard Fetcher")
                 }
-                .navigationBarTitle("Keyboard Fetcher")
             }
         }
     }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

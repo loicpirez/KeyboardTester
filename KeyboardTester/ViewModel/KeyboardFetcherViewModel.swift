@@ -11,16 +11,22 @@ import Combine
 
 class KeyboardFetcherViewModel: ObservableObject {
     @Published public var status: KeyboardStatus
-    @Published public var buttons: KeyboardButtons
+    @Published public var buttons: [KeyboardButton]
 
     init() {
         self.status = KeyboardStatus()
-        self.buttons = KeyboardButtons(
-            up: KeyboardButton(keycode: "82", name: "Up"),
-            down: KeyboardButton(keycode: "81", name: "Down"),
-            left: KeyboardButton(keycode: "80", name: "Left"),
-            right: KeyboardButton(keycode: "79", name: "Right")
-        )
+        self.buttons = [
+            KeyboardButton(keycode: GCKeyCode.upArrow.rawValue, name: "Up", type: KeyboardButtonType.direction),
+            KeyboardButton(keycode: GCKeyCode.downArrow.rawValue, name: "Down", type: KeyboardButtonType.direction),
+            KeyboardButton(keycode: GCKeyCode.leftArrow.rawValue, name: "Left", type: KeyboardButtonType.direction),
+            KeyboardButton(keycode: GCKeyCode.rightArrow.rawValue, name: "Right", type: KeyboardButtonType.direction),
+            KeyboardButton(keycode: GCKeyCode.returnOrEnter.rawValue, name: "Start", type: KeyboardButtonType.control),
+            KeyboardButton(keycode: GCKeyCode.rightShift.rawValue, name: "Select", type: KeyboardButtonType.control),
+            KeyboardButton(keycode: GCKeyCode.keyS.rawValue, name: "X", type: KeyboardButtonType.control),
+            KeyboardButton(keycode: GCKeyCode.keyD.rawValue, name: "O", type: KeyboardButtonType.control),
+            KeyboardButton(keycode: GCKeyCode.keyW.rawValue, name: "△", type: KeyboardButtonType.control),
+            KeyboardButton(keycode: GCKeyCode.keyA.rawValue, name: "□", type: KeyboardButtonType.control)
+        ]
 
         NotificationCenter.default.addObserver(
             forName: NSNotification.Name.GCKeyboardDidConnect,
@@ -32,17 +38,8 @@ class KeyboardFetcherViewModel: ObservableObject {
                 keyboard.keyChangedHandler = { (input, _, keyCode, pressed) in
                     let keyCodeDescription: String = keyCode.rawValue.description
 
-                    switch keyCodeDescription {
-                        case "82":
-                            self.buttons.up.pressed = pressed
-                        case "81":
-                            self.buttons.down.pressed = pressed
-                        case "80":
-                            self.buttons.left.pressed = pressed
-                        case "79":
-                            self.buttons.right.pressed = pressed
-                        default:
-                            print("Key \(keyCodeDescription) not handled")
+                    if let pressedKey = self.buttons.enumerated().first(where: {$0.element.keycode == Int(keyCodeDescription) ?? 0}) {
+                        self.buttons[pressedKey.offset].pressed = pressed
                     }
 
                     self.status.input = input.description
